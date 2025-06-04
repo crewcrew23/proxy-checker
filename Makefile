@@ -1,6 +1,5 @@
 .PHONY: build run-http run-socks5 run test clean
 
-# Определяем ОС
 ifeq ($(OS),Windows_NT)
     RM = del /Q
     RMDIR = rmdir /Q /S
