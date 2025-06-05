@@ -25,10 +25,10 @@ build:
 	go build -o $(TARGET) ./cmd/app/
 
 run-http:
-	@$(TARGET) -input $(BIN_DIR)$(SLASH)proxies-http.txt -type http -target https://www.google.com -timeout 5 -save $(BIN_DIR)$(SLASH)good-http.csv
+	@$(TARGET) --input $(BIN_DIR)$(SLASH)proxies-http.txt --type http --target https://www.google.com --timeout 5 --save $(BIN_DIR)$(SLASH)good-http.csv
 
 run-socks5:
-	@$(TARGET) -input $(BIN_DIR)$(SLASH)proxies-socks5.txt -type socks5 -target https://www.google.com -timeout 5 -save $(BIN_DIR)$(SLASH)good-socks5.csv
+	@$(TARGET) --input $(BIN_DIR)$(SLASH)proxies-socks5.txt --type socks5 --target https://www.google.com --timeout 5 --save $(BIN_DIR)$(SLASH)good-socks5.csv
 
 run: run-http run-socks5
 
@@ -43,8 +43,8 @@ test:
 	@$(ECHO) 127.0.0.1:1080 > $(TEST_BIN_DIR)$(SLASH)proxies-socks5.txt
 	@$(ECHO) 127.0.0.1:1081:test:secret >> $(TEST_BIN_DIR)$(SLASH)proxies-socks5.txt
 	
-	@$(TEST_TARGET) -input $(TEST_BIN_DIR)$(SLASH)proxies-http.txt -type http -target https://www.google.com -timeout 5 -save $(TEST_BIN_DIR)$(SLASH)good-http.csv
-	@$(TEST_TARGET) -input $(TEST_BIN_DIR)$(SLASH)proxies-socks5.txt -type socks5 -target https://www.google.com -timeout 5 -save $(TEST_BIN_DIR)$(SLASH)good-socks5.csv
+	@$(TEST_TARGET) --input $(TEST_BIN_DIR)$(SLASH)proxies-http.txt --type http --target https://www.google.com --timeout 5 --save $(TEST_BIN_DIR)$(SLASH)good-http.csv
+	@$(TEST_TARGET) --input $(TEST_BIN_DIR)$(SLASH)proxies-socks5.txt --type socks5 --target https://www.google.com --timeout 5 --save $(TEST_BIN_DIR)$(SLASH)good-socks5.csv
 	
 	@cd test && docker-compose down
 	@$(RMDIR) $(TEST_BIN_DIR)
