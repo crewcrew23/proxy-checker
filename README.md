@@ -19,21 +19,21 @@ The program receives a list of proxy servers and checks their availability by tr
 ## Usage
 
 ### Parameters
-| Флаг      | Описание                                                                 |
-|-----------|--------------------------------------------------------------------------|
-| `-input`  | Path to file with proxy list (one per line)                   |
-| `-type`   | Proxy type: `http` or `socks5` (all proxies in the file must be of the same type) |
-| `-target` | URL of the resource through which the availability of the proxy is checked              |
-| `-timeout`| Connection timeout in seconds (recomends 5)                         |
-| `-save`   | File for saving working proxies (in CSV format)                      |
+| Flag       | Description                                                                                                  | Required |
+|------------|--------------------------------------------------------------------------------------------------------------|----------|
+| `--input`  | Path to file with proxy list (one per line)                                                                  | ✅        |
+| `--type`   | Proxy type: `http` or `socks5` Default http:(all proxies in the file must be of the same type)                            | ❌        |
+| `--target` | URL of the resource through which the availability of the proxy is checked                                   | ✅        |
+| `--timeout`| Connection timeout in seconds (default 5)                                                                    | ❌        |
+| `--save`   | File for saving working proxies (in CSV format)                                             | ❌        |
 
 ```bash
-./proxy-checker -input <file_with_proxy> -type <proxy_type> -target <target_URL> -timeout <second> -save <output_file>
+./proxy-checker --input <file_with_proxy> --type <proxy_type> --target <target_URL> --timeout <second> --save <output_file>
 ```
 
 ### Example
 ```bash
-./proxy-checker -input proxies-socks5.txt -type socks5 -target https://www.google.com -timeout 5 -save good-socks5.csv
+./proxy-checker --input proxies-socks5.txt --type socks5 --target https://www.google.com --timeout 5 --save good-socks5.csv
 ```
 
 
