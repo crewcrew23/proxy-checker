@@ -40,33 +40,36 @@ The program receives a list of proxy servers and checks their availability by tr
 ## Input file format:
 proxy without auth <br>
 ``` host:port ```
+``` protocol://host:port ```
 
 proxy with auth <br>
-``` host:port:username:password ```
+``` username:password@host:port ```
+``` protocol://username:password@host:port ```
 
 ### Example
 ```
-127.0.0.1:1080
-127.0.0.1:1081:user:pass
-proxy.example.com:8888
+127.0.0.1:8888
+user:pass@127.0.0.1:8889
+http://user:pass@127.0.0.1:8889
 ```
-
 ## Testing
 Run <br>
 ``` make test ``` <br>
 will run the docker-compose with proxy <br>
 if all good, you will see like that
 ```
-🔍 Checking 2 proxies...
-✅ 127.0.0.1:8888 [148.1436ms]
-✅ 127.0.0.1:8889:user:pass [174.8869ms]
+🔍 Checking 3 proxies...
+✅ http://user:pass@127.0.0.1:8889 [618.2278ms]
+✅ user:pass@127.0.0.1:8889 [618.2278ms]
+✅ 127.0.0.1:8888 [618.2278ms]
 
-Total: 2, Alive: 2
+Total: 3, Alive: 3
 ✅ Saved good proxies to test_bin\good-http.csv
-🔍 Checking 2 proxies...
-✅ 127.0.0.1:1080 [127.5531ms]
-✅ 127.0.0.1:1081:test:secret [129.812ms]
+🔍 Checking 3 proxies...
+✅ socks5://test:secret@127.0.0.1:1081 [643.6372ms]
+✅ 127.0.0.1:1080 [643.636ms]
+✅ test:secret@127.0.0.1:1081 [642.626ms]
 
-Total: 2, Alive: 2
+Total: 3, Alive: 3
 ✅ Saved good proxies to test_bin\good-socks5.csv
 ```

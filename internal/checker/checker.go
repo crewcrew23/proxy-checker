@@ -49,28 +49,29 @@ func checkOne(proxyAddr, proxyType, target string, timeoutSec int) ProxyResult {
 	var client *http.Client
 
 	//input host:port or host:port:login:password
-	host, port, auth, err := parseProxyAddr(proxyAddr)
+	u, err := ParseProxyString(proxyAddr, proxyType)
 	if err != nil {
 		return ProxyResult{Proxy: proxyAddr, Alive: false, Err: err}
 	}
-	address := net.JoinHostPort(host, port)
+
+	address := u.Host
+	var auth *proxy.Auth
+
+	if u.User != nil {
+		password, _ := u.User.Password()
+		auth = &proxy.Auth{
+			User:     u.User.Username(),
+			Password: password,
+		}
+	}
 
 	switch proxyType {
 	case "http":
-		proxyURL := &url.URL{
-			Scheme: "http",
-			Host:   address,
-		}
-
-		if auth != nil {
-			proxyURL.User = url.UserPassword(auth.User, auth.Password)
-		}
-
 		client = &http.Client{
 			Timeout: timeout,
 			Transport: &http.Transport{
 				TLSHandshakeTimeout: 10 * time.Second,
-				Proxy:               http.ProxyURL(proxyURL),
+				Proxy:               http.ProxyURL(u),
 			},
 		}
 
@@ -100,16 +101,9 @@ func checkOne(proxyAddr, proxyType, target string, timeoutSec int) ProxyResult {
 
 }
 
-func parseProxyAddr(proxyAddr string) (host, port string, auth *proxy.Auth, err error) {
-	parts := strings.Split(proxyAddr, ":")
-	switch len(parts) {
-	case 2:
-		host, port = parts[0], parts[1]
-	case 4:
-		host, port = parts[0], parts[1]
-		auth = &proxy.Auth{User: parts[2], Password: parts[3]}
-	default:
-		err = fmt.Errorf("invalid proxy format: %s", proxyAddr)
+func ParseProxyString(s string, defaultProtocol string) (*url.URL, error) {
+	if !strings.Contains(s, "://") {
+		s = defaultProtocol + "://" + s
 	}
-	return
+	return url.Parse(s)
 }

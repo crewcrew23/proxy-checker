@@ -39,9 +39,12 @@ test:
 	@go build -o $(TEST_TARGET) ./cmd/app/
 	
 	@$(ECHO) 127.0.0.1:8888 > $(TEST_BIN_DIR)$(SLASH)proxies-http.txt
-	@$(ECHO) 127.0.0.1:8889:user:pass >> $(TEST_BIN_DIR)$(SLASH)proxies-http.txt
+	@$(ECHO) user:pass@127.0.0.1:8889 >> $(TEST_BIN_DIR)$(SLASH)proxies-http.txt
+	@$(ECHO) http://user:pass@127.0.0.1:8889 >> $(TEST_BIN_DIR)$(SLASH)proxies-http.txt
+
 	@$(ECHO) 127.0.0.1:1080 > $(TEST_BIN_DIR)$(SLASH)proxies-socks5.txt
-	@$(ECHO) 127.0.0.1:1081:test:secret >> $(TEST_BIN_DIR)$(SLASH)proxies-socks5.txt
+	@$(ECHO) test:secret@127.0.0.1:1081 >> $(TEST_BIN_DIR)$(SLASH)proxies-socks5.txt
+	@$(ECHO) socks5://test:secret@127.0.0.1:1081 >> $(TEST_BIN_DIR)$(SLASH)proxies-socks5.txt
 	
 	@$(TEST_TARGET) --input $(TEST_BIN_DIR)$(SLASH)proxies-http.txt --type http --target https://www.google.com --timeout 5 --save $(TEST_BIN_DIR)$(SLASH)good-http.csv
 	@$(TEST_TARGET) --input $(TEST_BIN_DIR)$(SLASH)proxies-socks5.txt --type socks5 --target https://www.google.com --timeout 5 --save $(TEST_BIN_DIR)$(SLASH)good-socks5.csv
