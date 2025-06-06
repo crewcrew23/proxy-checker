@@ -47,6 +47,11 @@ func main() {
 				Value: "",
 				Usage: "path to save good proxies (options)",
 			},
+			&cli.IntFlag{
+				Name:  "threshold",
+				Value: 100,
+				Usage: "threshold of the number of proxies in the list, upon reaching which the worker pool will be used for processing (default 100)",
+			},
 		},
 		Action: func(ctx context.Context, cmd *cli.Command) error {
 
@@ -55,6 +60,7 @@ func main() {
 			target := cmd.String("target")
 			timeout := cmd.Int("timeout")
 			save := cmd.String("save")
+			threshold := cmd.Int("threshold")
 
 			proxies, err := loader.LoadProxies(input)
 			if err != nil {
@@ -62,7 +68,7 @@ func main() {
 			}
 
 			fmt.Printf("🔍 Checking %d proxies...\n", len(proxies))
-			results := checker.CheckAll(proxies, target, proxyType, timeout)
+			results := checker.CheckAll(proxies, target, proxyType, timeout, threshold)
 			result.PrintSummary(results)
 
 			if save != "" {

@@ -20,8 +20,7 @@ type ProxyResult struct {
 	Err   error
 }
 
-func CheckAll(proxies []string, target string, proxyType string, timeoutSec int) []ProxyResult {
-	const threshold = 100
+func CheckAll(proxies []string, target, proxyType string, timeoutSec, threshold int) []ProxyResult {
 	var outputCH chan ProxyResult
 
 	if len(proxies) > threshold {
