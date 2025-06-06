@@ -6,8 +6,8 @@ import (
 	"net"
 	"net/http"
 	"net/url"
+	"runtime"
 	"strings"
-	"sync"
 	"time"
 
 	"golang.org/x/net/proxy"
@@ -21,24 +21,21 @@ type ProxyResult struct {
 }
 
 func CheckAll(proxies []string, target string, proxyType string, timeoutSec int) []ProxyResult {
-	var wg sync.WaitGroup
-	ch := make(chan ProxyResult, len(proxies))
+	const threshold = 100
+	var outputCH chan ProxyResult
 
-	for _, p := range proxies {
-		wg.Add(1)
-		go func(proxyAddr string) {
-			defer wg.Done()
-			resutl := CheckOne(proxyAddr, proxyType, target, timeoutSec)
-			ch <- resutl
-		}(p)
+	if len(proxies) > threshold {
+		workers := 4 * runtime.NumCPU()
+		outputCH = StartCheckerPool(proxies, target, proxyType, timeoutSec, workers)
+	} else {
+		outputCH = StartSyncGorutines(proxies, target, proxyType, timeoutSec)
 	}
-	wg.Wait()
-	close(ch)
 
 	var results []ProxyResult
-	for p := range ch {
+	for p := range outputCH {
 		results = append(results, p)
 	}
+
 	return results
 }
 
