@@ -53,8 +53,9 @@ user:pass@127.0.0.1:8889
 http://user:pass@127.0.0.1:8889
 ```
 ## Testing
-Run <br>
-``` make test ``` <br>
+```make test-unit```<br>
+run unit tests <br>
+``` make test-e2e ``` <br>
 will run the docker-compose with proxy <br>
 if all good, you will see like that
 ```
