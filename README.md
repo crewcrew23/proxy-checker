@@ -26,7 +26,7 @@ The program receives a list of proxy servers and checks their availability by tr
 | `--target` | URL of the resource through which the availability of the proxy is checked                                   | ✅        |
 | `--timeout`| Connection timeout in seconds (default 5)                                                                    | ❌        |
 | `--save`   | File for saving working proxies (in CSV format)                                             | ❌        |
-| `--trashold`   | threshold of the number of proxies in the list, upon reaching which the worker pool will be used for processing (default 100)                                            | ❌        |
+| `--threshold`   | threshold of the number of proxies in the list, upon reaching which the worker pool will be used for processing (default 100)                                            | ❌        |
 
 ```bash
 ./proxy-checker --input <file_with_proxy> --type <proxy_type> --target <target_URL> --timeout <second> --save <output_file>
