@@ -28,7 +28,7 @@ func CheckAll(proxies []string, target string, proxyType string, timeoutSec int)
 		wg.Add(1)
 		go func(proxyAddr string) {
 			defer wg.Done()
-			resutl := checkOne(proxyAddr, proxyType, target, timeoutSec)
+			resutl := CheckOne(proxyAddr, proxyType, target, timeoutSec)
 			ch <- resutl
 		}(p)
 	}
@@ -42,13 +42,12 @@ func CheckAll(proxies []string, target string, proxyType string, timeoutSec int)
 	return results
 }
 
-func checkOne(proxyAddr, proxyType, target string, timeoutSec int) ProxyResult {
+func CheckOne(proxyAddr, proxyType, target string, timeoutSec int) ProxyResult {
 	timeout := time.Duration(timeoutSec) * time.Second
 	start := time.Now()
 
 	var client *http.Client
 
-	//input host:port or host:port:login:password
 	u, err := ParseProxyString(proxyAddr, proxyType)
 	if err != nil {
 		return ProxyResult{Proxy: proxyAddr, Alive: false, Err: err}

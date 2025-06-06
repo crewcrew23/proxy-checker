@@ -14,7 +14,7 @@ import (
 
 func main() {
 	cmd := &cli.Command{
-		Name: "proxy-checker - cli util for check available proxy",
+		Name: "proxy-checker",
 		Flags: []cli.Flag{
 			&cli.StringFlag{
 				Name:     "input",

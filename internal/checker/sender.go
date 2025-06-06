@@ -1,15 +1,10 @@
 package checker
 
 import (
-	"encoding/base64"
+	"errors"
 	"net/http"
 	"time"
 )
-
-func basicAuthHeader(user, pass string) string {
-	auth := user + ":" + pass
-	return "Basic " + base64.StdEncoding.EncodeToString([]byte(auth))
-}
 
 func sendSocks5(client *http.Client, proxyAddr, target string, start time.Time) ProxyResult {
 	resp, err := client.Get(target)
@@ -17,6 +12,10 @@ func sendSocks5(client *http.Client, proxyAddr, target string, start time.Time) 
 		return ProxyResult{Proxy: proxyAddr, Alive: false, Err: err}
 	}
 	defer resp.Body.Close()
+
+	if resp.StatusCode > 399 {
+		return ProxyResult{Proxy: proxyAddr, Alive: false, Err: errors.New(resp.Status)}
+	}
 
 	delay := time.Since(start)
 	return ProxyResult{Proxy: proxyAddr, Alive: true, Delay: delay}
@@ -33,6 +32,10 @@ func sendHttp(client *http.Client, proxyAddr, target string, start time.Time) Pr
 		return ProxyResult{Proxy: proxyAddr, Alive: false, Err: err}
 	}
 	defer resp.Body.Close()
+
+	if resp.StatusCode > 399 {
+		return ProxyResult{Proxy: proxyAddr, Alive: false, Err: errors.New(resp.Status)}
+	}
 
 	delay := time.Since(start)
 	return ProxyResult{Proxy: proxyAddr, Alive: true, Delay: delay}

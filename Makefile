@@ -1,4 +1,4 @@
-.PHONY: build run-http run-socks5 run test clean
+.PHONY: build run-http run-socks5 run test-e2e clean test-unit
 
 ifeq ($(OS),Windows_NT)
     RM = del /Q
@@ -32,7 +32,7 @@ run-socks5:
 
 run: run-http run-socks5
 
-test:
+test-e2e:
 	@cd test && docker-compose up --build -d
 	@$(MKDIR) $(TEST_BIN_DIR)
 	
@@ -51,6 +51,9 @@ test:
 	
 	@cd test && docker-compose down
 	@$(RMDIR) $(TEST_BIN_DIR)
+
+test-unit:
+	go test -race ./test/...
 
 clean:
 	@$(RM) $(TARGET) $(BIN_DIR)$(SLASH)*.csv
