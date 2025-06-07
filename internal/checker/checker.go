@@ -16,7 +16,7 @@ import (
 type ProxyResult struct {
 	Proxy string
 	Alive bool
-	Delay time.Duration
+	Delay int64
 	Err   error
 }
 

@@ -26,15 +26,23 @@ The program receives a list of proxy servers and checks their availability by tr
 | `--target` | URL of the resource through which the availability of the proxy is checked                                   | ✅        |
 | `--timeout`| Connection timeout in seconds (default 5)                                                                    | ❌        |
 | `--save`   | File for saving working proxies (in CSV format)                                             | ❌        |
+| `--savetype`   | file extension json/csv (default: json)                                             | ❌        |
 | `--threshold`   | threshold of the number of proxies in the list, upon reaching which the worker pool will be used for processing (default 100)                                            | ❌        |
 
 ```bash
 ./proxy-checker --input <file_with_proxy> --type <proxy_type> --target <target_URL> --timeout <second> --save <output_file>
+./proxy-checker --input <file_with_proxy> --type <proxy_type> --target <target_URL> --timeout <second> --save <output_file> --savetype csv
+```
+
+if the number of proxies in the input file is larger, than ``` --threshold ``` or if you need to change the threshold
+```bash
+./proxy-checker --input proxies-socks5.txt --type socks5 --target https://www.google.com --timeout 5 --save good-socks5 --threshold 50
 ```
 
 ### Example
 ```bash
-./proxy-checker --input proxies-socks5.txt --type socks5 --target https://www.google.com --timeout 5 --save good-socks5.csv
+./proxy-checker --input proxies-socks5.txt --type socks5 --target https://www.google.com --timeout 5 --save good-socks5
+./proxy-checker --input proxies-socks5.txt --type socks5 --target https://www.google.com --timeout 5 --save good-socks5 --savetype csv
 ```
 
 

@@ -18,7 +18,7 @@ func sendSocks5(client *http.Client, proxyAddr, target string, start time.Time) 
 	}
 
 	delay := time.Since(start)
-	return ProxyResult{Proxy: proxyAddr, Alive: true, Delay: delay}
+	return ProxyResult{Proxy: proxyAddr, Alive: true, Delay: delay.Milliseconds()}
 }
 
 func sendHttp(client *http.Client, proxyAddr, target string, start time.Time) ProxyResult {
@@ -38,5 +38,5 @@ func sendHttp(client *http.Client, proxyAddr, target string, start time.Time) Pr
 	}
 
 	delay := time.Since(start)
-	return ProxyResult{Proxy: proxyAddr, Alive: true, Delay: delay}
+	return ProxyResult{Proxy: proxyAddr, Alive: true, Delay: delay.Milliseconds()}
 }

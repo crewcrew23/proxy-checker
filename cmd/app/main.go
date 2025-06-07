@@ -47,6 +47,11 @@ func main() {
 				Value: "",
 				Usage: "path to save good proxies (options)",
 			},
+			&cli.StringFlag{
+				Name:  "savetype",
+				Value: "json",
+				Usage: "file extension json/csv (default: json)",
+			},
 			&cli.IntFlag{
 				Name:  "threshold",
 				Value: 100,
@@ -60,7 +65,18 @@ func main() {
 			target := cmd.String("target")
 			timeout := cmd.Int("timeout")
 			save := cmd.String("save")
+			saveType := cmd.String("savetype")
 			threshold := cmd.Int("threshold")
+
+			validProxyType := map[string]bool{"http": true, "socks5": true}
+			if !validProxyType[proxyType] {
+				return fmt.Errorf("unsupported proxy type: %s", proxyType)
+			}
+
+			validFileType := map[string]bool{"json": true, "csv": true}
+			if !validFileType[saveType] {
+				return fmt.Errorf("unsupported file type: %s", saveType)
+			}
 
 			proxies, err := loader.LoadProxies(input)
 			if err != nil {
@@ -72,7 +88,7 @@ func main() {
 			result.PrintSummary(results)
 
 			if save != "" {
-				if err := result.SaveGood(results, save); err != nil {
+				if err := result.SaveGood(results, save, saveType); err != nil {
 					log.Fatalf("Failed to save good proxies: %v", err)
 				}
 				fmt.Printf("✅ Saved good proxies to %s\n", save)

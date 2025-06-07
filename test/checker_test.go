@@ -1,10 +1,10 @@
 package test
 
 import (
-	"log"
 	"net/http"
 	"net/http/httptest"
 	"net/url"
+	"strings"
 	"testing"
 
 	"github.com/crewcrew23/proxy-checker/internal/checker"
@@ -18,7 +18,6 @@ func prepareHttp() (*httptest.Server, *httptest.Server) {
 
 	proxyMock := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		auth := r.Header.Get("Proxy-Authorization")
-		log.Println(auth)
 		if auth != "" && auth != "Basic dXNlcjpwYXNz" {
 			w.WriteHeader(http.StatusProxyAuthRequired)
 			return
@@ -89,6 +88,12 @@ func TestChecker_HTTP(t *testing.T) {
 			ProxyType: "http",
 			Expected:  false,
 		},
+		{
+			Name:      "Timeout proxy",
+			Proxy:     proxyURL.Host + ":9999",
+			ProxyType: "http",
+			Expected:  false,
+		},
 	}
 
 	for _, tt := range tests {
@@ -106,6 +111,8 @@ func TestChecker_SOCKS5(t *testing.T) {
 	ts, addr1, close1, addr2, close2 := prepareSocks5()
 	defer close1()
 	defer close2()
+
+	proxyHost := strings.Split(addr1, ":")[0]
 
 	tests := []struct {
 		Name      string
@@ -134,6 +141,12 @@ func TestChecker_SOCKS5(t *testing.T) {
 		{
 			Name:      "SOCKS5 with invalid auth",
 			Proxy:     "wrong:creds@" + addr2,
+			ProxyType: "socks5",
+			Expected:  false,
+		},
+		{
+			Name:      "Timeout proxy",
+			Proxy:     proxyHost + ":9999",
 			ProxyType: "socks5",
 			Expected:  false,
 		},
